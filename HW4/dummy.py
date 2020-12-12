@@ -117,6 +117,19 @@ def genderFinder(nameLooker):
 
     return gender
 
+def relatedNamesFinder(nameLooker):
+    response = requests.get('https://www.behindthename.com/api/related.json?name=' + nameLooker + '&key=er829146479').json()
+
+    output = 'Related Names ' + nameLooker + ': '
+
+    for i in range(len(response['names'])):
+        #print(response['names'][i])
+        output += response['names'][i] + ', '
+
+    finalOutput = output[:-2]
+    
+    return finalOutput
+
 # route() decorator binds a function to a URL
 @app.route('/', methods = ['GET'])
 def hello():
@@ -136,8 +149,10 @@ def page2func():
     # call genderFunction
     gender = genderFinder(searchedName)
 
+    # call relatedNamesFunction
+    relatedNames = relatedNamesFinder(searchedName)
     # pass on image, ratings list, gender and name to result page
-    return render_template('resultDummy.html', searchedName=searchedName, image=image, ratings=ratings, gender=gender)
+    return render_template('resultDummy.html', searchedName=searchedName, image=image, ratings=ratings, gender=gender, relatedNames=relatedNames)
 
 if __name__ == '__main__':
     app.run()
