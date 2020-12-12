@@ -4,7 +4,6 @@ from flask import render_template
 from image_info import image_info
 from PIL import Image
 from google_images_search import GoogleImagesSearch
-from io import BytesIO
 import json 
 import pathlib
 pathlib.Path().absolute()
@@ -87,34 +86,13 @@ def imageFinder(nameLooker):
 
     gis.search({'q': searchTerm, 'num': 1,'fileType': 'jpg'}, custom_image_name = name)
 
-    my_bytes_io = BytesIO()
-    
     for image in gis.results():
-        # here we tell the BytesIO object to go back to address 0
-        my_bytes_io.seek(0)
+        path = str(pathlib.Path().absolute())
+        image.download(path)
+        #output = image
 
-        # take raw image data
-        raw_image_data = image.get_raw_data()
-
-        # this function writes the raw image data to the object
-        image.copy_to(my_bytes_io, raw_image_data)
-
-        # or without the raw data which will be automatically taken
-        # inside the copy_to() method
-        image.copy_to(my_bytes_io)
-
-        # we go back to address 0 again so PIL can read it from start to finish
-        my_bytes_io.seek(0)
-
-        # create a temporary image object
-        temp_img = Image.open(my_bytes_io)
-
-        # show it in the default system photo viewer
-        temp_img.show()
-
-        outputImage = temp_img
-
-    return outputImage
+    namePath = path + '\\' + name + '.jpg'
+    return namePath
 
 
 app = Flask(__name__)
