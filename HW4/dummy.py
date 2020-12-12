@@ -4,15 +4,17 @@ from flask import render_template
 from image_info import image_info
 from PIL import Image
 from google_images_search import GoogleImagesSearch
+from bs4 import BeautifulSoup
+
 import json 
 import pathlib
-pathlib.Path().absolute()
 import random
 import requests
 import flask
 
+app = Flask(__name__)
+boostrap = Bootstrap(app)
 
-from bs4 import BeautifulSoup
 # create an instance of the Flask class
 def resultFinder(nameLooker):
     result = requests.get("https://www.behindthename.com/name/"+nameLooker+"/rating")
@@ -84,19 +86,36 @@ def imageFinder(nameLooker):
     except KeyError:
         searchTerm = 'IDK'
 
-    gis.search({'q': searchTerm, 'num': 1,'fileType': 'jpg'}, custom_image_name = name)
+    gis.search({'q': searchTerm, 'num': 1,'fileType': 'png'}, custom_image_name = name)
 
     for image in gis.results():
-        path = str(pathlib.Path().absolute())
+        path = 'static/img/'
         image.download(path)
         #output = image
 
-    namePath = path + '\\' + name + '.jpg'
+    namePath = 'static/img/' + name + '.jpg'
     return namePath
 
+def genderFinder(nameLooker): 
+    gender = ''
+    response = requests.get('https://www.behindthename.com/api/lookup.json?name=' + nameLooker + '&key=er829146479').json()
+    
+    try:
+        genderType = response[0]['gender']
 
-app = Flask(__name__)
-boostrap = Bootstrap(app)
+        if genderType == 'm':
+            gender = 'static/img/maleGender.png'
+            
+        if genderType == 'f':
+            gender = 'static/img/female.png'
+
+        if genderType == 'mf' or genderType == 'fm':
+            gender = 'static/img/uni.png'
+
+    except KeyError:
+        return 'static/img/noImage.jpg'
+
+    return gender
 
 # route() decorator binds a function to a URL
 @app.route('/', methods = ['GET'])
@@ -105,17 +124,20 @@ def hello():
 
 @app.route('/second', methods = ['POST'])
 def page2func():
-  # Get the searchedName
-  searchedName = flask.request.form['searchedName']
+    # Get the searchedName
+    searchedName = flask.request.form['searchedName']
 
-  # call imageFunction
-  image = imageFinder(searchedName)
+    # call imageFunction
+    image = imageFinder(searchedName)
 
-  # call ratingsFunction
-  ratings = resultFinder(searchedName)
+    # call ratingsFunction
+    ratings = resultFinder(searchedName)
 
-  # pass on image, ratings list and name to result page
-  return render_template('resultDummy.html', searchedName=searchedName, image=image, ratings=ratings)
+    # call genderFunction
+    gender = genderFinder(searchedName)
+
+    # pass on image, ratings list, gender and name to result page
+    return render_template('resultDummy.html', searchedName=searchedName, image=image, ratings=ratings, gender=gender)
 
 if __name__ == '__main__':
     app.run()
