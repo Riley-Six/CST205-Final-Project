@@ -3,6 +3,11 @@ from flask_bootstrap import Bootstrap
 from flask import render_template
 from image_info import image_info
 from PIL import Image
+from google_images_search import GoogleImagesSearch
+from io import BytesIO
+import json 
+import pathlib
+pathlib.Path().absolute()
 import random
 import requests
 import flask
@@ -61,8 +66,55 @@ def resultFinder(nameLooker):
 
     return(outPutCombine)
 
+def imageFinder(nameLooker):
+    gis = GoogleImagesSearch('AIzaSyALNghCvPMwTXWwrXorvOUvy9ydUCdlcvU', 'aa5bd644ce5a37202')
+    name = nameLooker
 
+    response = requests.get('https://www.behindthename.com/api/lookup.json?name=' + name + '&key=er829146479').json()
 
+    try:
+        usage = response[0]['usages'][0]['usage_full']
+
+        if usage == 'English':
+            usage = 'UK'
+        
+        if usage == 'Italian':
+            usage = 'Italy'
+
+        searchTerm = usage +' Flag'
+    except KeyError:
+        searchTerm = 'IDK'
+
+    gis.search({'q': searchTerm, 'num': 1,'fileType': 'jpg'}, custom_image_name = name)
+
+    my_bytes_io = BytesIO()
+    
+    for image in gis.results():
+        # here we tell the BytesIO object to go back to address 0
+        my_bytes_io.seek(0)
+
+        # take raw image data
+        raw_image_data = image.get_raw_data()
+
+        # this function writes the raw image data to the object
+        image.copy_to(my_bytes_io, raw_image_data)
+
+        # or without the raw data which will be automatically taken
+        # inside the copy_to() method
+        image.copy_to(my_bytes_io)
+
+        # we go back to address 0 again so PIL can read it from start to finish
+        my_bytes_io.seek(0)
+
+        # create a temporary image object
+        temp_img = Image.open(my_bytes_io)
+
+        # show it in the default system photo viewer
+        temp_img.show()
+
+        outputImage = temp_img
+
+    return outputImage
 
 
 app = Flask(__name__)
@@ -79,11 +131,10 @@ def page2func():
   searchedName = flask.request.form['searchedName']
 
   # call imageFunction
-  image = searchedName + '.jpg'
+  image = imageFinder(searchedName)
 
   # call ratingsFunction
   ratings = resultFinder(searchedName)
-
 
   # pass on image, ratings list and name to result page
   return render_template('resultDummy.html', searchedName=searchedName, image=image, ratings=ratings)
