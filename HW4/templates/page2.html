@@ -1,0 +1,15 @@
+<div class="container">
+<br>
+    {% for item in my_list %}
+         {% if(item.id == imageID) %}
+         <h1> {{ item.title }} by {{ item.flickr_user }} </h1>
+         <br>
+         <img src="/static/images/{{ item.id }}.jpg">
+         <br><br>
+         <strong> {{ imageMode }} image in {{ imageFormat }} format with width {{ imageSize[0] }} and height {{ imageSize[1] }} </strong>
+         {% endif %}
+    {% endfor %}
+<br><br>
+<h1>{{ searchedName }}<h1>
+<a href="{{ url_for('hello') }}"> Back to list of images</a>
+</div>
