@@ -120,15 +120,27 @@ def genderFinder(nameLooker):
 def relatedNamesFinder(nameLooker):
     response = requests.get('https://www.behindthename.com/api/related.json?name=' + nameLooker + '&key=er829146479').json()
 
-    output = 'Related Names ' + nameLooker + ': '
+    output =  'Related Names ' + nameLooker + ': '
 
-    for i in range(len(response['names'])):
-        #print(response['names'][i])
-        output += response['names'][i] + ', '
+    try:
+        #output = 'Related Names ' + nameLooker + ': '
+        if response['names'] == 0:
+            output += "(None on in this system)"
+        else:
+            for i in range(len(response['names'])):
+                #print(response['names'][i])
+                output += response['names'][i] + ', '
 
-    finalOutput = output[:-2]
+            output = output[:-2] + "."
     
-    return finalOutput
+    except KeyError:
+        return (output + 'No names were found in the system related to' + nameLooker + ".")
+
+
+
+    #finalOutput = output[:-2]
+    
+    return output
 
 # route() decorator binds a function to a URL
 @app.route('/', methods = ['GET'])

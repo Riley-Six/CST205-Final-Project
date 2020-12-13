@@ -1,12 +1,15 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
 
 
+<form action='/second' method = 'POST'>
+    <button class="btn btn-primary" type="submit" id="nameSearch"> Home </button>
+</form>
+
 <body>
 	<div class="container">
 		<div class="jumbotron">
-			<h1>Results:</h1>
+			<h1>Results for: {{searchedName}}</h1>
 			<div class="container">
-                <h1>{{searchedName}}</h1>
                 <a href="{{ url_for('hello') }}"> {{searchedName}}</a>
                 <p> {{ratings}} </p>
                 <br><br>
@@ -24,5 +27,3 @@
 	</div>
 	<script type="text/javascript" src="app.js"></script>
 </body>
-
-</div>
