@@ -3,18 +3,12 @@ from flask_bootstrap import Bootstrap
 from flask import render_template
 from image_info import image_info
 from PIL import Image
-from google_images_search import GoogleImagesSearch
-from bs4 import BeautifulSoup
-
-import json 
-import pathlib
 import random
 import requests
 import flask
 
-app = Flask(__name__)
-boostrap = Bootstrap(app)
 
+from bs4 import BeautifulSoup
 # create an instance of the Flask class
 def resultFinder(nameLooker):
     result = requests.get("https://www.behindthename.com/name/"+nameLooker+"/rating")
@@ -67,42 +61,14 @@ def resultFinder(nameLooker):
 
     return(outPutCombine)
 
-def imageFinder(nameLooker):
-    gis = GoogleImagesSearch('AIzaSyALNghCvPMwTXWwrXorvOUvy9ydUCdlcvU', 'aa5bd644ce5a37202')
-    name = nameLooker
 
-    response = requests.get('https://www.behindthename.com/api/lookup.json?name=' + name + '&key=er829146479').json()
 
-    try:
-        usage = response[0]['usages'][0]['usage_full']
 
-        if usage == 'English':
-            usage = 'UK'
-        
-        if usage == 'Italian':
-            usage = 'Italy'
 
-        searchTerm = usage +' Flag'
-    except KeyError:
-        searchTerm = 'IDK'
-
-    gis.search({'q': searchTerm, 'num': 1,'fileType': 'png'}, custom_image_name = name)
-
-    for image in gis.results():
-        path = 'static/img/'
-        image.download(path)
-        #output = image
-
-    namePath = 'static/img/' + name + '.jpg'
-    return namePath
-
-def genderFinder(nameLooker): 
-    gender = ''
-    response = requests.get('https://www.behindthename.com/api/lookup.json?name=' + nameLooker + '&key=er829146479').json()
-    
-    try:
-        genderType = response[0]['gender']
-
+<<<<<<< Updated upstream
+app = Flask(__name__)
+boostrap = Bootstrap(app)
+=======
         if genderType == 'm':
             gender = 'static/img/maleGender.png'
             
@@ -118,17 +84,27 @@ def genderFinder(nameLooker):
     return gender
 
 def relatedNamesFinder(nameLooker):
-    response = requests.get('https://www.behindthename.com/api/related.json?name=' + nameLooker + '&key=er829146479').json()
+    response = requests.get('https://www.behindthename.com/api/related.json?name=' + nameLooker.lower() + '&key=er829146479').json()
 
-    output = 'Related Names ' + nameLooker + ': '
+    output = 'Names related to ' + nameLooker + ': '
 
-    for i in range(len(response['names'])):
-        #print(response['names'][i])
-        output += response['names'][i] + ', '
+    if len(response['names']) == 0 :
+        output += 'There were none on record.'
+    else:
+        for i in range(len(response['names'])):
+            #print(response['names'][i])
+            output += response['names'][i] + ', '
 
-    finalOutput = output[:-2]
+        output = output[:-2] + "."
+
+    
+
+
+
+    finalOutput = output
     
     return finalOutput
+>>>>>>> Stashed changes
 
 # route() decorator binds a function to a URL
 @app.route('/', methods = ['GET'])
@@ -137,22 +113,18 @@ def hello():
 
 @app.route('/second', methods = ['POST'])
 def page2func():
-    # Get the searchedName
-    searchedName = flask.request.form['searchedName']
+  # Get the searchedName
+  searchedName = flask.request.form['searchedName']
 
-    # call imageFunction
-    image = imageFinder(searchedName)
+  # call imageFunction
+  image = searchedName + '.jpg'
 
-    # call ratingsFunction
-    ratings = resultFinder(searchedName)
+  # call ratingsFunction
+  ratings = resultFinder(searchedName)
 
-    # call genderFunction
-    gender = genderFinder(searchedName)
 
-    # call relatedNamesFunction
-    relatedNames = relatedNamesFinder(searchedName)
-    # pass on image, ratings list, gender and name to result page
-    return render_template('resultDummy.html', searchedName=searchedName, image=image, ratings=ratings, gender=gender, relatedNames=relatedNames)
+  # pass on image, ratings list and name to result page
+  return render_template('resultDummy.html', searchedName=searchedName, image=image, ratings=ratings)
 
 if __name__ == '__main__':
     app.run()
