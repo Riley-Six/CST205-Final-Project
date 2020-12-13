@@ -65,8 +65,46 @@ def resultFinder(nameLooker):
 
 
 
+<<<<<<< Updated upstream
 app = Flask(__name__)
 boostrap = Bootstrap(app)
+=======
+        if genderType == 'm':
+            gender = 'static/img/maleGender.png'
+            
+        if genderType == 'f':
+            gender = 'static/img/female.png'
+
+        if genderType == 'mf' or genderType == 'fm':
+            gender = 'static/img/uni.png'
+
+    except KeyError:
+        return 'static/img/noImage.jpg'
+
+    return gender
+
+def relatedNamesFinder(nameLooker):
+    response = requests.get('https://www.behindthename.com/api/related.json?name=' + nameLooker.lower() + '&key=er829146479').json()
+
+    output = 'Names related to ' + nameLooker + ': '
+
+    if len(response['names']) == 0 :
+        output += 'There were none on record.'
+    else:
+        for i in range(len(response['names'])):
+            #print(response['names'][i])
+            output += response['names'][i] + ', '
+
+        output = output[:-2] + "."
+
+    
+
+
+
+    finalOutput = output
+    
+    return finalOutput
+>>>>>>> Stashed changes
 
 # route() decorator binds a function to a URL
 @app.route('/', methods = ['GET'])
