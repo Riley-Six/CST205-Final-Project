@@ -1,0 +1,24 @@
+{{ bootstrap.load_css() }}
+{{ bootstrap.load_js() }}
+<h1>CST 205 Random Picture Gallery</h1>
+
+
+
+<form id="genderLookup" method="get">
+    <label class="col-sm-2">Enter A Name:</label>
+    <input id="searchedName" class="col-sm-4" type="text" name="searchedName">
+    <button class="btn btn-primary" type="submit" id="nameSearch"> Search </button>
+</form>
+
+<ul class="list-group">
+    {% for item in my_list %}
+        <a href="{{ url_for('page2func', imageID=item.id) }}"> {{ item.title }}</a>
+        <img src="/static/images/{{ item.id }}.jpg"
+        width="250"
+        class="img-fluid rounded"
+        >
+        <br>
+    {% endfor %}
+</ul>
+
+<h1>{{ name2 }}</h1>
