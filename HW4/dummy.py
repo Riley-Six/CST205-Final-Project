@@ -120,7 +120,7 @@ def genderFinder(nameLooker):
 def relatedNamesFinder(nameLooker):
     response = requests.get('https://www.behindthename.com/api/related.json?name=' + nameLooker + '&key=er829146479').json()
 
-    output =  'Related Names ' + nameLooker + ': '
+    output =  'Names related to ' + nameLooker + ': '
 
     try:
         #output = 'Related Names ' + nameLooker + ': '
@@ -128,8 +128,10 @@ def relatedNamesFinder(nameLooker):
             output += "(None on in this system)"
         else:
             for i in range(len(response['names'])):
-                #print(response['names'][i])
+                #print(response['names'][i]) 
                 output += response['names'][i] + ', '
+
+
 
             output = output[:-2] + "."
     
