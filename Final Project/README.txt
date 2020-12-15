@@ -8,4 +8,5 @@ Instructions:   Run dummy.py, type in name and search
                             (May need other imports if you are not a members of CST 205)
 
 Github Repo: https://github.com/Riley-Six/CST205-Final-Project
+Trello: https://trello.com/b/BWDJ8Tc2/jobs
 Future Work: Optimize image storage, HTML enhancing
