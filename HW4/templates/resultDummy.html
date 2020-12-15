@@ -4,24 +4,24 @@
 <body>
 	<div class="container">
 		<div class="jumbotron">
+            <form action='/' method = 'GET'>
+                <button class="btn btn-primary" type="submit" id="nameSearch"> Home </button>
+            </form>
 			<h1>Results for: {{searchedName}}</h1>
 			<div class="container">
                 <p> {{ratings}} </p>
                 <br><br>
                 <p> {{relatedNames}} </p>
                 <br><br>
-                <p>The gender commonly acciated with the name <b>{{searchedName}}</b>:</p>
-                <img src="{{gender}}">
+                <p>The gender commonly associated with the name <b>{{searchedName}}</b>:</p>
+                <img src="{{gender}}" width="300" height="auto">
                 <br>
                 <P>A country in which this name is used commonly:</P>
-                <img src="{{image}}" width="1000" height="1000">
+                <img src="{{image}}" width="500" height="auto">
                 <br><br>
             </div>
 		</div>	
         <div class="flex-container" id="images"></div>
-        <form action='/' method = 'GET'>
-            <button class="btn btn-primary" type="submit" id="nameSearch"> Home </button>
-        </form>
 	</div>
     <script type="text/javascript" src="app.js"></script>
 </body>

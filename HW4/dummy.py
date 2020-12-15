@@ -120,7 +120,7 @@ def genderFinder(nameLooker):
 def relatedNamesFinder(nameLooker):
     response = requests.get('https://www.behindthename.com/api/related.json?name=' + nameLooker + '&key=er829146479').json()
 
-    output =  'Related Names ' + nameLooker + ': '
+    output =  'Names Related to ' + nameLooker + ': '
 
     try:
         #output = 'Related Names ' + nameLooker + ': '
@@ -129,9 +129,13 @@ def relatedNamesFinder(nameLooker):
         else:
             for i in range(len(response['names'])):
                 #print(response['names'][i])
-                output += response['names'][i] + ', '
+        
+                if i is len(response['names']) -1:
+                    output += 'and ' + response['names'][i] + '.'
+                else:
+                    output += response['names'][i] + ', '
 
-            output = output[:-2] + "."
+            #output = output[:-2] + "."
     
     except KeyError:
         return (output + 'No names were found in the system related to' + nameLooker + ".")
