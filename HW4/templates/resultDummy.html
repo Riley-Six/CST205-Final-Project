@@ -1,16 +1,11 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
 
 
-<form action='/second' method = 'POST'>
-    <button class="btn btn-primary" type="submit" id="nameSearch"> Home </button>
-</form>
-
 <body>
 	<div class="container">
 		<div class="jumbotron">
 			<h1>Results for: {{searchedName}}</h1>
 			<div class="container">
-                <a href="{{ url_for('hello') }}"> {{searchedName}}</a>
                 <p> {{ratings}} </p>
                 <br><br>
                 <p> {{relatedNames}} </p>
@@ -19,11 +14,14 @@
                 <img src="{{gender}}">
                 <br>
                 <P>A country in which this name is used commonly:</P>
-                <img src="{{image}}">
+                <img src="{{image}}" width="1000" height="1000">
                 <br><br>
             </div>
 		</div>	
-		<div class="flex-container" id="images"></div>
+        <div class="flex-container" id="images"></div>
+        <form action='/' method = 'GET'>
+            <button class="btn btn-primary" type="submit" id="nameSearch"> Home </button>
+        </form>
 	</div>
-	<script type="text/javascript" src="app.js"></script>
+    <script type="text/javascript" src="app.js"></script>
 </body>
