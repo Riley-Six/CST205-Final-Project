@@ -1,11 +1,19 @@
+"""
+Course: CST205-01_FA20:Multimedia Design & Progmng
+Title: CST-205-Final-Project
+Authors: Riley Galloway, Eric Guerra, Pedro Avalos
+Date: 12/2/2020
+Sources: Behind The Name API, Google Tmage Search API
+
+"""
+
+
 from flask import Flask 
 from flask_bootstrap import Bootstrap
 from flask import render_template
-from image_info import image_info
 from PIL import Image
 from google_images_search import GoogleImagesSearch
 from bs4 import BeautifulSoup
-# adfadf
 import json 
 import pathlib
 import random
@@ -16,6 +24,8 @@ app = Flask(__name__)
 boostrap = Bootstrap(app)
 
 # create an instance of the Flask class
+# This function scrapes the webpage detailinging the popularity of the name sent in
+# Riley worked on this alone.
 def resultFinder(nameLooker):
     result = requests.get("https://www.behindthename.com/name/"+nameLooker+"/rating")
 
@@ -67,6 +77,8 @@ def resultFinder(nameLooker):
 
     return(outPutCombine)
 
+#This function gathers the usage data from the sent in name and takes the first language associated with it.
+#Eric worked on this alone.
 def imageFinder(nameLooker):
     gis = GoogleImagesSearch('AIzaSyALNghCvPMwTXWwrXorvOUvy9ydUCdlcvU', 'aa5bd644ce5a37202')
     name = nameLooker
@@ -96,6 +108,8 @@ def imageFinder(nameLooker):
     namePath = 'static/img/' + name + '.jpg'
     return namePath
 
+#This function returns the gender of the sent in name.
+#Eric worked on this, inspired by code from Riley.
 def genderFinder(nameLooker): 
     gender = ''
     response = requests.get('https://www.behindthename.com/api/lookup.json?name=' + nameLooker + '&key=er829146479').json()
@@ -117,6 +131,8 @@ def genderFinder(nameLooker):
 
     return gender
 
+#This function gathers the data detailing the names retailed to the sent in name.
+#Eric worked on this, inspired by code from Riley.
 def relatedNamesFinder(nameLooker):
     response = requests.get('https://www.behindthename.com/api/related.json?name=' + nameLooker + '&key=er829146479').json()
 
@@ -146,6 +162,8 @@ def relatedNamesFinder(nameLooker):
     
     return output
 
+
+#All three of us worked on the route set up.
 # route() decorator binds a function to a URL
 @app.route('/', methods = ['GET'])
 def hello():
